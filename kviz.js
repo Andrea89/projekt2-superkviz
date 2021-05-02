@@ -11,6 +11,7 @@ let poleOtazek = [
     spravnaOdpoved: 'Umět JavaScript'}, 
 ];
 
+//sem si budu ukládat odpovědi uživatele
 let poleOdpovedi = [];
 
 //pole jen pro jednu stránku
@@ -22,8 +23,13 @@ let hadanka = {
     spravnaOdpoved: 'Mončičák'
 };
 
-poleOtazek.forEach(function(generovaniOtazek){
+//vygeneruji si první otázku
+if (poleOdpovedi.length == 0) {
+    vygenerujOtazku(poleOtazek[0]);
+    console.log("jsem u otazky č. 1");
+}
 
+function vygenerujOtazku(generovaniOtazek) {
     //bily ramecek
     let kviz = document.createElement('div');
     kviz.className = 'kviz';
@@ -54,21 +60,15 @@ poleOtazek.forEach(function(generovaniOtazek){
     let odpovedi = document.createElement('ul');
     odpovedi.id = 'odpovedi';
     odpovedi.className = 'odpovedi';
-    let pocetOdpovedi = generovaniOtazek.moznost.length;
 
     //vygeneruje to všechny možnosti
     generovaniOtazek.moznost.forEach(function (vec){
-    let li = document.createElement('li');
-    odpovedi.appendChild(li);
-    li.innerHTML += vec;
+        let li = document.createElement('li');
+        odpovedi.appendChild(li);
+        li.innerHTML += vec;
     });
 
-    //zde mi bohuzel nefunguje odebírání druhého a třetího kvízu (pro začátek jsem chtěla jen ten druhý)
-        //let cisloOdebraneho = 1;
-        //let odebrani = document.querySelector('.kviz');
-        //odebrani.parentNode.removeChild(odebrani[cisloOdebraneho]);
     
-
     //funkce na kliknutí
     odpovedi.onclick = function (event) {
         let odpovedElement = event.target;
@@ -76,16 +76,29 @@ poleOtazek.forEach(function(generovaniOtazek){
         poleOdpovedi.push(odpovedElement.innerText);
         console.log(poleOdpovedi);
 
-        let odebraniPredchoziho = document.querySelector('.kviz');
-        odebraniPredchoziho.parentNode.removeChild(odebraniPredchoziho);
+        //jakmile na otázku kliknu, zmizí
+        let odebraniObjektu = document.querySelector('.kviz');
+        odebraniObjektu.parentNode.removeChild(odebraniObjektu);       
+
     
+        
+        console.log("Jdu generovat novou otázku.");
+
+        //vygeneruji si druhou otázku
+        if (poleOdpovedi.length == 1) {
+            console.log("jsem u otazky č. 2");
+            vygenerujOtazku(poleOtazek[1]);
+        }
+
+        //vygeneruji si třetí otázku
+        if (poleOdpovedi.length == 2) {
+            vygenerujOtazku(poleOtazek[2]);
+        }
+
         //ukazat vysledek
         if (poleOdpovedi.length >= 3) {
             ukazVysledek();
         }
-
-        //cisloOdebraneho++;
-        
     }
 
     //implementace do stránky
@@ -101,9 +114,7 @@ poleOtazek.forEach(function(generovaniOtazek){
     //dát tabulku do těla stránky
     let tabulka = document.querySelector("body");
     tabulka.appendChild(kviz);
-
-
-});
+};
 
 function ukazVysledek () {
     console.log("odpovedi jsou zadány");
@@ -158,10 +169,4 @@ function ukazVysledek () {
     //dát tabulku do těla stránky
     let tabulka = document.querySelector("body");
     tabulka.appendChild(kviz);
-
-   
-
-
-
-    
 }
